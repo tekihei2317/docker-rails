@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    volumes:
+      - ./docker/db/confd:/etc/mysql/conf.d
+      - ./docker/db/seeds:/docker-entrypoint-initdb.d
+      - db_store:/var/lib/mysql
+    ports:
+        - ${IP}:3306:3306
+    env_file: ./.env
+  rails:
+    build:
+      context: .
+      dockerfile: ./docker/rails/Dockerfile
+    volumes:
+      - ./backend:/backend
+      - installed_gems:/usr/local/bundle
+    command: bash -c "chmod u+x startup-rails.sh && ./startup-rails.sh"
+    ports:
+      - ${IP}:3001:3001
+      - ${IP}:1234:1234
+    env_file: ./.env
+    environment:
+      - DEBUG_MODE=${DEBUG_MODE:-}
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  installed_gems:
+  db_store:
