@@ -1,20 +1,18 @@
 # docker-rails
 
-## Setup
-TODO: 動作確認する
-
+## 初回の起動
 ```bash
 git clone git@github.com:tekihei2317/docker-rails.git
 cd docker-rails
-
-cp .env.example .env
-docker-compose up -d --build
-docker-compose exec rails rails db:create
-docker-compose exec rails rails db:migrate
+make setup
 ```
 
-## デバッガを起動したい場合
+## 2回目以降
 ```bash
-DEBUG_MODE=1 docker-compose up -d
+# 通常の起動
+make up
+
+# デバッガの起動
+make debug
 ```
-VSCodeでデバッガの再生ボタンを押すと、Railsサーバーが起動します。
+デバッガを起動した場合は、VSCodeでデバッガの再生ボタンを押すとRailsサーバーが起動します。
